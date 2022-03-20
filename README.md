@@ -1,1 +1,1 @@
-# ruby
+# Ruby for practicing OOP
