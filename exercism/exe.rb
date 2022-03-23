@@ -1793,12 +1793,174 @@ class Darts
 end
 
 
+=begin
+Write your code for the 'Binary Search Tree' exercise in this file. Make the tests in
+`binary_search_tree_test.rb` pass.
+ 
+To get started with TDD, see the `README.md` file in your
+`ruby/binary-search-tree` directory.
+=end
+class Bst
+  attr_reader :data, :left, :right
+  def initialize(data)
+    @data = data
+    @left = nil
+    @right = nil
+  end
+  def insert(e)
+    if e > data
+      if right
+        @right.insert(e)
+      else
+        @right = Bst.new(e)
+      end
+    elsif e <= data
+      if left
+        @left.insert(e)
+      else
+        @left = Bst.new(e)
+      end
+    end
+    self
+  end
+  def each(&block)
+    return to_enum(:each) unless block_given?
+    if !left && !right
+      yield self.data
+    elsif left && !right
+      left.each &block
+      yield self.data
+    elsif !left && right
+      yield self.data
+      right.each &block   
+    else
+      left.each &block
+      yield self.data
+      right.each &block 
+    end
+  end
+end
+
+=begin
+Write your code for the 'Grains' exercise in this file. Make the tests in
+`grains_test.rb` pass.
+ 
+To get started with TDD, see the `README.md` file in your
+`ruby/grains` directory.
+=end
+class Grains
+  
+  def self.square(n)
+    raise ArgumentError.new() if n < 1 || n > 64
+    if n == 1
+      1
+    else
+      2 * self.square(n-1)
+    end
+  end
+  def self.total
+    (1..64).sum { |n| square(n)}
+  end
+end
 
 
+=begin
+Write your code for the 'Perfect Numbers' exercise in this file. Make the tests in
+`perfect_numbers_test.rb` pass.
+ 
+To get started with TDD, see the `README.md` file in your
+`ruby/perfect-numbers` directory.
+=end
+class PerfectNumber
+  def self.get_factors(n)
+    arr = []
+    (1...n).each { |m| arr.push m if n % m == 0}
+    arr
+  end
+  def self.classify(n)
+    raise RuntimeError if n < 1
+    if get_factors(n).sum > n 
+      return "abundant"
+    elsif get_factors(n).sum < n
+      return "deficient"
+    else  
+      return "perfect"
+    end
+  end
+end
 
-
-
-
+=begin
+Write your code for the 'Matrix' exercise in this file. Make the tests in
+`matrix_test.rb` pass.
+ 
+To get started with TDD, see the `README.md` file in your
+`ruby/matrix` directory.
+=end
+class Matrix
+  attr_reader = :rows
+  def initialize(str)
+    @str = str
+  end
+  def rows
+    @str.split("\n").map { |row| row.split(" ").map {|s| s.to_i} } 
+  end
+  def columns
+    (0...rows.size).map { |i| rows.map { |row| row[i]}}
+  end
+end
   
 
 
+=begin
+Write your code for the 'Anagram' exercise in this file. Make the tests in
+`anagram_test.rb` pass.
+
+To get started with TDD, see the `README.md` file in your
+`ruby/anagram` directory.
+=end
+
+class Anagram
+  def initialize(str)
+    @str = str.downcase.strip
+    @arr = @str.split("")
+    @hash = Hash.new(0)
+    @arr.each { |char| @hash[char] = @hash[char] + 1 }
+  end
+  def match(words)
+    arr = []
+    words.each do |word| 
+      clean_word = word.downcase.strip
+      next if clean_word == @str
+      new_hash = @hash.clone
+      clean_word.split("").each do |char| 
+        new_hash[char] = new_hash[char] - 1
+        break if new_hash[char]  == -1
+      end
+      arr.push(word) if new_hash.values.sum == 0
+    end
+    arr
+  end
+end
+
+=begin
+Write your code for the 'Largest Series Product' exercise in this file. Make the tests in
+`largest_series_product_test.rb` pass.
+ 
+To get started with TDD, see the `README.md` file in your
+`ruby/largest-series-product` directory.
+=end
+class Series
+  def initialize(num)
+    @num = num
+    @arr = num.split("")
+  end
+  def largest_product(x)
+    raise ArgumentError if @num.match(/[^0-9]/) || @num.size < x || x < 0
+    product = 0
+    (x..@arr.size).each do |n|
+      mult = (n-x...n).inject(1) { |acc, m| acc * @arr[m].to_i }
+        product = mult if mult > product
+    end
+    product
+  end
+end
